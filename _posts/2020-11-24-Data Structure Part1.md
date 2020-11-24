@@ -1,8 +1,8 @@
 ---
 title: Data Structure Part1
 author: Kwon Suncheol
-categories: [Data Structure]
-tags: [Data Structure, Stack, Queue]
+categories: [Data_Structure]
+tags: [Data_Structure, Stack, Queue]
 pin: false
 math: true
 comments: true
@@ -37,7 +37,7 @@ comments: true
 ## Queue
 
 - 큐(Queue)는 데이터가 들어온 순서대로 접근 가능합니다. 즉 FIFO(First in, First Out) 구조입니다. 
-
+- 다음의 이미지를 통해 큐에 대한 시각화를 진행할 수 있습니다.
   
 
 
