@@ -6,7 +6,6 @@ tags: [Data Structure, Stack, Queue]
 pin: false
 math: true
 comments: true
-date: 2020-11-24 23:20:00 +0900
 ---
 
 <br>
