@@ -1,7 +1,7 @@
 ---
 title: Data Structure Part1
 author: Kwon Suncheol
-categories: [Data Structure]
+categories: [Data_Structure]
 tags: [data structure,stack, queue]
 pin: false
 math: true
