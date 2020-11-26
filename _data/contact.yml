@@ -19,6 +19,12 @@
 #  icon: 'fas fa-rss'
 #  noblank: true
 
+- 
+  icon: 'fab fa-medium'
+  url: 'https://classicmania33.medium.com/'
+
+	
+
 # Uncomment and complete the url below to enable more contact options
 #-
 #   icon: 'fab fa-mastodon'   # icons powered by <https://fontawesome.com/>
