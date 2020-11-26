@@ -7,31 +7,9 @@
 -
   type: github
   icon: 'fab fa-github-alt'
-#-
-#  type: twitter
-#  icon: 'fab fa-twitter'
-#-
-#  type: email
-#  icon: 'fas fa-envelope'
-#  noblank: true            # open link in current tab
-#-
-#  type: rss
-#  icon: 'fas fa-rss'
-#  noblank: true
-
 - 
   icon: 'fab fa-medium'
-  url: 'https://classicmania33.medium.com/'
-
-	
-
-# Uncomment and complete the url below to enable more contact options
-#-
-#   icon: 'fab fa-mastodon'   # icons powered by <https://fontawesome.com/>
-#   url:  ''                  # Fill with your mastodon account page
+  url: 'https://classicmania33.medium.com/'	
 -
   icon: 'fab fa-linkedin'   # icons powered by <https://fontawesome.com/>
   url:  'https://www.linkedin.com/in/%EC%88%9C%EC%B2%A0-%EA%B6%8C-9218a8180/'                  # Fill with your Linkedin homepage
-# -
-#   icon: 'fab fa-stack-overflow'
-#   url:  ''                  # Fill with your stackoverflow homepage
