@@ -327,10 +327,68 @@ linkedlist1.print_node()
 9
 ```
 
+그렇다면 특정 노드를 삭제하기 위해서는 어떻게 해야 할까요?  
+삭제도 다음의 세 가지 경우가 있습니다.  
+- 첫번째 노드를 삭제할 경우. 
+-  중간 노드를 삭제할 경우. 
+-  마지막 노드를 삭제할 경우. 
+
+이를 고려하여 구현해보겠습니다.
+
+```python
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+    
+class NodeConnect:
+    def __init__(self, data):
+        self.head = Node(data)
+        
+    def add(self, data):
+        if self.head == '':
+            self.head = Node(data)
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+            node.next = Node(data)
+        
+    def print_node(self):
+        node = self.head
+        while node:
+            print (node.data)
+            node = node.next
+    
+    def delete(self, data):
+        if self.head == '':
+            print("해당 값을 가진 노드가 없습니다.")
+            return False
+        
+        # 첫번째 노드를 삭제할 경우
+        if self.head.data == data:
+            temp = self.head
+            self.head = self.head.next
+            del temp
+        # 중간 노드와 마지막 노드를 삭제할 경우
+        else:
+            node = self.head
+            while node.next:
+                if node.next.data == data:
+                    temp = node.next
+                    node.next = node.next.next
+                    del temp
+                    return
+                else:
+                    node = node.next
+```
+
+
+
 
 <br>
 
-지금까지 다양한 자료 구조들 중에서 {Array, Queue, Stack, Linked List}를 코드를 통해 생각해 보았습니다. 처음에는 쉬운 참고 자료[^6]를 통해 직관적으로 자료구조들을 공부할 수 있었습니다. 하지만 위의 자료 구조들을 직접 구현해 보면서 다음의 명제를[**"각각의 데이터 자료 구조별로 장단점이 존재하기 때문에 프로그래밍을 할 때 맥락에 맞는 자료 구조를 선택하는 것이 중요하다"** ]를 보다 분명하게 발견할 수 있었습니다. 무엇보다 프로그래밍 관련된 부분을 공부하고 사고할수록 과거의 옳지 못했던 코딩 습관을 되돌아볼 수 있어서 굉장히 재밌습니다. '자료 구조'와 '알고리즘' 관련하여 계속해서 공부하고 연결하고 싶은 마음을 간직하면서 짧은 글을 마무리 하겠습니다.
+ 지금까지 다양한 자료 구조들 중에서 {Array, Queue, Stack, Linked List}를 코드를 통해 생각해 보았습니다. 처음에는 쉬운 참고 자료[^6]를 통해 직관적으로 자료구조들을 공부할 수 있었습니다. 하지만 위의 자료 구조들을 직접 구현해 보면서 다음의 명제를[**"각각의 데이터 자료 구조별로 장단점이 존재하기 때문에 프로그래밍을 할 때 맥락에 맞는 자료 구조를 선택하는 것이 중요하다"** ]를 보다 분명하게 발견할 수 있었습니다. 무엇보다 프로그래밍 관련된 부분을 공부하고 사고할수록 과거의 옳지 못했던 코딩 습관을 되돌아볼 수 있어서 굉장히 재밌습니다. '자료 구조'와 '알고리즘' 관련하여 계속해서 공부하고 연결하고 싶은 마음을 간직하면서 짧은 글을 마무리 하겠습니다.
 
 
 
