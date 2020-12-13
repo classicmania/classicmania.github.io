@@ -2,7 +2,7 @@
 title: Data Structure Part1
 author: Kwon Suncheol
 categories: [Data_Structure]
-tags: [data structure,stack, queue]
+tags: [data structure,stack,queue,linked_list]
 pin: false
 math: true
 comments: true
@@ -382,8 +382,6 @@ class NodeConnect:
                 else:
                     node = node.next
 ```
-
-
 
 
 <br>
