@@ -8,14 +8,15 @@ title: About
 # MIT License
 ---
 
-안녕하세요.  
-머신러닝과 통계적 모델을 활용한 정량적인 데이터 분석과 모델링을 통해서 **현실의 문제를 푸는 것에 관심이 많은 권순철입니다**. 특히 E-Commerce 산업군에서 고객 경험 향상을 위해 고군분투하고 있습니다. 구체적으로 다양한 프로젝트 단위로 고객의 행동 데이터 분석과 분석한 내용을 유연하게 표현하는 모델링을 진행하고 있습니다. 그리고 스파크와 같이 병렬 처리 프레임워크를 활용한 대용량 데이터 처리에 관하여 연구하고 현실에 적용하고 있습니다.  
+안녕하세요. 
+데이터 분석과 머신러닝과 통계적 모델을 활용한 정량적인 모델링을 통해서 <span style="color:blue">**현실의 문제를 푸는 것에 관심이 많은 권순철입니다**</span> . 특히 E-Commerce 산업군에서 고객 경험 향상을 위해 고군분투하고 있습니다. 구체적으로 다양한 프로젝트 단위로 고객의 행동 데이터 분석과 분석한 내용을 유연하게 표현하는 모델링을 진행하고 있습니다. 그리고 스파크와 같이 병렬 처리 프레임워크를 활용한 대용량 데이터 처리에 관하여 연구하고 현실에 적용하고 있습니다.  
  
  <br>
  
  현재 직무와 관련하여 관심을 가지는 분야는 다음과 같습니다.  
  - Recommendation system for E-commerce
  - Statistical modeling
+ - Machine Learning
  - Probability theory
  - Customer Behavior data analysis
  - Network Analysis
@@ -26,7 +27,7 @@ title: About
 <br>
 
 취미(Hobbies)
-- 독서 및 사색 : [독서 및 사색 기록소](https://classicmania33.medium.com/)
+- 독서 및 사고실험 : <span style="color:blue">[독서 및 사색 저장소](https://classicmania33.medium.com/)</span>
 - NBA 보기
 	- 'San Antonio Spurs'팬입니다 
 	-  정확히 말하면 [Popovich](https://en.wikipedia.org/wiki/Gregg_Popovich)팬입니다.
