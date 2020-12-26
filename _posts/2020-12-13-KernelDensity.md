@@ -232,7 +232,7 @@ ___________________
 
 ![Alt Text](https://yenaworldblog.files.wordpress.com/2019/01/kde-bandwidth%EB%B3%80%ED%99%942.gif?w=533&h=351&zoom=2)
 
-위의 그래프들의 이동으로 살펴볼 때 bandwidth가 높을 수록 커널 밀도 
+위의 그래프들의 이동으로 살펴볼 때 bandwidth가 높을 수록 커널값이 수평으로 누그러지는 효과를 확인할 수 있습니다. 
 
 
 bandwidth의 효과를 위의 쌍봉분포에 적용해 보겠습니다.
@@ -261,9 +261,9 @@ def kde_value(x, x_grid, bandwidth=0.2, **kwargs):
 plt.rcParams['figure.figsize']=(16,10)
 figure,axe = plt.subplots()
 for bw in [0.1,0.4,0.7,1]:
-    axe.plot(x_grid,kde_sklearn(total_data,
-                                x_grid,
-                                bandwidth = bw),
+    axe.plot(x_grid,kde_value(total_data,
+                              x_grid,
+                              bandwidth = bw),
              label = 'bandwidth = {}'.format(bw))
     axe.set_xlim(-4,8)
     axe.legend(loc = 'upper right')
