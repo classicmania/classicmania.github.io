@@ -55,6 +55,13 @@ ___________________
 |**Positive Class**|TP(True Positive)|FN(False Negative)|
 |**Negative Class**|FP(False Positive)|TN(True Negative)|
 
+이커머스에서 이탈 예측 문제를 해당 표와 연결하면 다음과 같습니다.
+
+||이탈로 예측|이탈이 아니라고 예측|
+|:------:|:---:|:---:|
+|**실제 이탈 O**|TP(True Positive)|FN(False Negative)|
+|**실제 이탈 X**|FP(False Positive)|TN(True Negative)|
+
  사기 탐지(Fraud detection) 영역에서는 다음과 같은 그림으로 위의 표의 케이스를 응용하여 해석할 수 있습니다. 
 
 ![false-positive-test-diagram](/assets/img/post_img/false-positive-test-diagram.png)_false-positive test diagram in fraud detection[^3]_
@@ -111,7 +118,7 @@ $$
 <br/> 
 
 $$
-Precision = \frac {TP}{TP+FN} 
+Precision = \frac {TP}{TP+FP} 
 $$
 
 <br/> 
@@ -122,11 +129,11 @@ $$
 
 <br/> 
 
- 수식의 의미를 사기 탐지 태스크와 이탈 예측 태스크에 각각 맞추어서 살펴보겠습니다.  사기 탐지 태스크에서 정밀도의 의미는 해당 클래스가 '사기'로  예측하였을 때 실제로 사기일 비율을 의미합니다. 이와 유사하게 이탈 예측 태스크에서 정밀도의 의미는 해당 클래스가 '이탈'로 예측하였을 때 실제로 '이탈'을 할 비율을 뜻합니다.  
+ 수식의 의미를 사기 탐지 태스크와 이탈 예측 태스크에 각각 맞추어서 살펴보겠습니다.  사기 탐지 태스크에서 정밀도의 의미는 해당 클래스가 '사기'로  예측하였을 때 실제로 사기일 비율을 의미합니다. 이와 유사하게 **이탈 예측 태스크에서 정밀도의 의미는 해당 클래스가 '이탈'로 예측하였을 때 실제로 '이탈'을 할 비율**을 뜻합니다.  
  <br/>
   재현율은 수식상으로 민감도와 같습니다. 사기 탐지 태스크에서 재현율은 해당 클래스가 실제로 '사기'일 때 사기로 예측할 확률을 말합니다. 이탈 예측 태스크에서는 실제로 '이탈'일 때 이탈로 예측할 비율을 의미합니다.    
  <br/> 
-수식에서 알 수 있듯이 정밀도와 재현율은 모델의 성능이 아주 높지 않은 이상 그래프로 다음과 표현됩니다.
+수식에서 알 수 있듯이 정밀도와 재현율은 일반적으로 다음과 같이 표현될 것입니다.
 
 ![Precision_Recall_Curve_image1](/assets/img/post_img/Precision_Recall_Curve_image1.png)_General Precision-Recall Curve[^4]_
  
@@ -172,7 +179,7 @@ ___________________
 - 다음의 상황을 가정해 봅니다.
 	- 아래의 표는 각자의 성과 특성이 담긴 테이블입니다.
 	- 다음과 같은 기준으로 사람들을 묶을 수 있을 것입니다.
-		- **비슷한 특질이 있는 사람들 끼리 묶기!** 	
+		- **비슷한 특질이 있는 사람들 끼리 묶기!** 
 		- **비슷하지 않는 특색을 가진 사람들을 구분하기!**
 		- **첫번째 방법과 두번째 방법을 섞어서 묶기!**
 
@@ -186,10 +193,21 @@ ___________________
 
 Undersampling도 앞의 세 가지 경우와 비슷합니다. 구체적으로 다음과 같이 기법을 세분화할 수 있습니다.  
 - 유지할 데이터를 선택하는 방법
+	- Near Miss Undersampling
+	- Condensed Nearest Neighbor Rule 	
 - 제거할 데이터를 선택하는 방법
+	- Tomek Links
+	- ENN(Edited Nearest Neighbor Rule) 	
 - 첫번째와 두번째를 적절히 섞은 방법
+	- One-Sided Selection
+		-  Tomek Links -> CNN
+	- Neighborhood Cleansing Rule
+		-  CNN -> ENN
 
+### Mixed Sampling
 
+- SMOTE + Tomek Links
+- SMOTE + Edited Nearest Neighbor Rule
 
 ## Reference
 
