@@ -8,11 +8,11 @@ math: true
 comments: true
 ---
 
-![Imbalanced_image](/assets/img/post_img/Imbalanced_image.jpg)_Cute imbalanced image[^1]_
+![Imbalanced_image](/assets/img/post_img/Imbalanced_image.jpg)_Cute imbalanced image_
 
 <br>
 
- 지도학습에서 분류 문제를 다룰 때 Imbalanced classification인 경우가 많았습니다. 예를 들어 이커머스 데이터를 활용하여 개별적인 고객의 이탈을 예측하는 모델을 만들 때 위의 문제를 발견할 수 있었습니다. **실무에서 이탈 예측 태스크를 진행하면서 '불균형 데이터를 어떻게 다룰 것인가'에 대하여 생각한 것들을 정리하는 시간을 가졌습니다.**
+ 지도학습에서 분류 문제를 다룰 때 Imbalanced classification인 경우가 많았습니다. 예를 들어 이커머스 데이터를 활용하여 개별적인 고객의 이탈을 예측하는 모델을 만들 때 위의 문제를 발견할 수 있었습니다. **실무에서 이탈 예측 태스크를 진행하면서 '불균형 데이터를 어떻게 다룰 것인가'에 대하여 생각한 것들을 두 개의 블로그 컨텐츠로 정리하는 시간을 가졌습니다.** 해당 글은 그 중 첫번째 글입니다. 
 
 
 ## Imbalanced data
