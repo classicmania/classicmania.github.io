@@ -101,7 +101,9 @@ $$
 
 <br/> 
 
-사기 탐지 같은 경우 민감도를 특이도보다 더 중요한 지표로 삼을 것입니다. 이 해석을 제가 마주한 문제에 비유하면 이탈을 하지 않는데 이탈을 하는 것으로 예측하는 것이 미래 시점에 이탈이 발생했는데 잘못 예측하는 것보다 덜 치명적일 것입니다.<br/>
+사기 탐지 같은 경우 민감도를 특이도보다 더 중요한 지표로 삼을 것입니다. 이 해석을 제가 마주한 문제에 그대로 비유하면 이탈을 하지 않는데 이탈을 하는 것으로 예측하는 것이 미래 시점에 이탈이 발생했는데 잘못 예측하는 것보다 덜 치명적일 것입니다. 하지만 일반적으로 이탈하는 고객이 이탈하지 않는 고객보다 훨씬 많습니다. 그러므로 기계적인 해석이 아니라 해당 이커머스 업체의 특성에 따라서 특이도와 민감도의 차이를 비교해야 합니다. 
+
+<br/>
 
 만약 특이도와 민감도 두 가지 모두를 고려하고 싶을 때는 두 지표의 기하평균인 G-mean을 사용합니다. 
 
@@ -197,8 +199,15 @@ RUS에 대한 이미지를 살펴보면 다음과 같습니다.
 
 Undersampling도 앞의 세 가지 경우와 비슷합니다. 구체적으로 다음과 같이 기법을 세분화할 수 있습니다. 세부적인 Sampling 기법의 방법들에 대해 알고 싶으시면 아래 주석의 논문들을 참고하시길 바랍니다.
 - 유지할 데이터를 선택하는 방법
-	- Near Miss Undersampling[^7]
-	- Condensed Nearest Neighbor Rule[^8]	
+	- Near Miss Undersampling[^7]	
+		- NearMiss-1 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 작은 세 개의 샘플을 뽑습니다.
+		-  NearMiss-2 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 먼 세 개의 샘플을 뽑습니다.
+		-  NearMiss-3 : 소수의 클래스의 개별 샘플로부터 가장 거리가 가까운 샘플들을 뽑습니다.
+	- Condensed Nearest Neighbor Rule[^8] 
+		- CNN기법은 모델의 성능에 해를 끼치지 않는 데이터의 부분집합을 찾는 방법입니다.	
+		- 자세한 내용은 아래의 코드와 함께 설명하였습니다.
+
+	
 - 제거할 데이터를 선택하는 방법
 	- Tomek Links[^9]
 	- ENN(Edited Nearest Neighbor Rule)[^10] 	
@@ -207,7 +216,192 @@ Undersampling도 앞의 세 가지 경우와 비슷합니다. 구체적으로 �
 		-  Tomek Links -> CNN
 	- Neighborhood Cleansing Rule[^12]
 		-  CNN -> ENN
-		
+	
+<br/>
+
+#### 유지할 데이터를 선택하는 방법
+
+가상의 불균형 데이터를 만들어서 Under sampling의 효과를 살펴보겠습니다. 먼저 10000개 샘플에 관하여 두 가지 예측 변수들과 클래스가 0이거나 1인 클래스를 구성하겠습니다. 노이즈 데이터의 비율은 실험의 명확성을 위해 0으로 설정하였고 다수 클래스에 대한 가중치는 90%로 설정하였습니다. 
+
+```python
+X, y = mc(n_samples=10000,
+		 weights=[0.90],
+                n_features = 2,
+                n_redundant=0,
+                n_clusters_per_class=1,
+                random_state = 33,
+                flip_y=0)
+
+print(Counter(y))
+```
+
+```
+Counter({0: 9001, 1: 999})
+```
+
+![raw_data_scatter_plot](/assets/img/post_img/raw_data_scatter_plot.png)_Raw data Scatter Plot_
+
+<br/>
+
+##### Nearmiss-3 
+
+다수 클래스와 소수 클래스의 Boundary를 알 수 있게 해주는 "NearMiss-3" 기법[각각의 소수 클래스로부터 거리가 가까운 다수 클래스내 샘플 수 기준은 5입니다]을 적용한 데이터의 Scatter plot을 살펴보면 다음과 같습니다.
+
+![nearmiss_plot](/assets/img/post_img/nearmiss_plot.png)_Nearmiss3 data Scatter Plot_
+
+<br/>
+
+##### Condensed nearest neighbour
+
+다음은 imbalanced-learn library에서 Condensed nearest neighbour[^13]를 구현한 코드입니다. 코드 내용을 통해 CNN은 다음과 같이 동작함을 알 수 있습니다.
+
+- Random Seed를 설정한 후 다수 클래스에서 하나의 샘플을 임의적으로 추출합니다.
+- 모든 소수 클래스의 샘플들과 앞에서 추출한 샘플을 사용하여 하나의 부분집합(C)을 생성합니다.
+- 모든 다수 클래스를 이용하여 부분집합 S를 만듭니다.
+- Set C를 KNN에 적합시킨 후 모델이 제대로 분류한 샘플들은 고르지 않고 제대로 분류되지 않은 샘플들을 C에 Append시킵니다.
+- 해당 알고리즘은 이중 for문을 쓰는 구조이므로 knn의 하이퍼 파라미터를 작게 해주는 것이 일반적으로 좋습니다.
+
+```python
+def _fit_resample(self, X, y):
+    self._validate_estimator()
+
+    random_state = check_random_state(self.random_state)
+    target_stats = Counter(y)
+    class_minority = min(target_stats, key=target_stats.get)
+    idx_under = np.empty((0,), dtype=int)
+
+    for target_class in np.unique(y):
+        if target_class in self.sampling_strategy_.keys():
+            # Randomly get one sample from the majority class
+            # Generate the index to select
+            idx_maj = np.flatnonzero(y == target_class)
+            idx_maj_sample = idx_maj[
+                random_state.randint(
+                    low=0,
+                    high=target_stats[target_class],
+                    size=self.n_seeds_S,
+                )
+            ]
+
+            # Create the set C - One majority samples and all minority
+            C_indices = np.append(
+                np.flatnonzero(y == class_minority), idx_maj_sample
+            )
+            C_x = _safe_indexing(X, C_indices)
+            C_y = _safe_indexing(y, C_indices)
+
+            # Create the set S - all majority samples
+            S_indices = np.flatnonzero(y == target_class)
+            S_x = _safe_indexing(X, S_indices)
+            S_y = _safe_indexing(y, S_indices)
+
+            # fit knn on C
+            self.estimator_.fit(C_x, C_y)
+
+            good_classif_label = idx_maj_sample.copy()
+            # Check each sample in S if we keep it or drop it
+            for idx_sam, (x_sam, y_sam) in enumerate(zip(S_x, S_y)):
+
+                # Do not select sample which are already well classified
+                if idx_sam in good_classif_label:
+                    continue
+
+                # Classify on S
+                if not issparse(x_sam):
+                    x_sam = x_sam.reshape(1, -1)
+                pred_y = self.estimator_.predict(x_sam)
+
+                # If the prediction do not agree with the true label
+                # append it in C_x
+                if y_sam != pred_y:
+                    # Keep the index for later
+                    idx_maj_sample = np.append(
+                        idx_maj_sample, idx_maj[idx_sam]
+                    )
+
+                    # Update C
+                    C_indices = np.append(C_indices, idx_maj[idx_sam])
+                    C_x = _safe_indexing(X, C_indices)
+                    C_y = _safe_indexing(y, C_indices)
+
+                    # fit a knn on C
+                    self.estimator_.fit(C_x, C_y)
+
+                    # This experimental to speed up the search
+                    # Classify all the element in S and avoid to test the
+                    # well classified elements
+                    pred_S_y = self.estimator_.predict(S_x)
+                    good_classif_label = np.unique(
+                        np.append(
+                            idx_maj_sample, np.flatnonzero(pred_S_y == S_y)
+                        )
+                    )
+
+            idx_under = np.concatenate((idx_under, idx_maj_sample), axis=0)
+        else:
+            idx_under = np.concatenate(
+                (idx_under, np.flatnonzero(y == target_class)), axis=0
+            )
+
+    self.sample_indices_ = idx_under
+
+    return _safe_indexing(X, idx_under), _safe_indexing(y, idx_under)
+```
+
+앞의 불균형 데이터에 CNN[k value in KNN = 5]을 적용하면 다음과 같습니다. 
+
+```
+Raw data --> Counter({0: 9001, 1: 999})
+After CNN processing --> Counter({0: 153, 1: 999})
+```
+
+![CNN](/assets/img/post_img/Condensed_Nearest_Neighbour_image.png)_After CNN processing data Scatter Plot_
+
+CNN은 Under sampling 기법 중 '유지할 데이터를 선택하는 방법'에 충실하지만 다음과 같은 코드에서 임의성을 발견할 수 있습니다.
+
+```python
+for target_class in np.unique(y):
+        if target_class in self.sampling_strategy_.keys():
+            # Randomly get one sample from the majority class
+            # Generate the index to select
+            idx_maj = np.flatnonzero(y == target_class)
+            idx_maj_sample = idx_maj[
+                random_state.randint(
+                    low=0,
+                    high=target_stats[target_class],
+                    size=self.n_seeds_S,
+                )
+            ]
+```
+
+#### 제거할 데이터를 선택하는 방법
+
+##### Tomek Links
+
+이런 초반의 임의성은 유지하지 않아도 되는 데이터를 부분집합에 속하게 만듭니다. 이것을 제어하기 위해서 엄밀한 쌍을 하나 만듭니다. 그 쌍은 다음과 같이 정의됩니다
+
+> Tomek Link : 인스턴스 a와 인스턴스 b는 다음과 같을 때 'Tomek Link'라 한다. 인스턴스의 가장 가까운 이웃은 인스턴스 b이다. 마찬가지로 인스턴스 b와 가장 가까운 이웃은 인스턴스 a이다. 이 때 인스턴스 a와 인스턴스 b는 서로 다른 클래스에 속해야 한다. 
+
+이렇게 되면 앞의 CNN의 임의성을 제거되면서 각 클래스간의 경계를 명확히 알 수 있습니다. TomekLink(k = 2)의 결과를 확인해 보겠습니다.
+
+```
+Counter({0: 9001, 1: 999})
+Counter({0: 8953, 1: 999})
+```
+
+![Tomeklink](/assets/img/post_img/Tomeklink.png)_After TomekLink processing data Scatter Plot_
+
+위의 그래프를 통해 알 수 있듯이 각 클래스의 경계를 아는 것만으로는 Undersampling의 큰 효과를 발휘할 수 없습니다. 그래서 실무상에서는 Tomek Link를 통해 Noise와 경계값을 제거한 후 다른 Under Sampling(Ex : CNN) 기법을 같이 사용합니다. 두 가지 기법(Tomek Link + CNN)을 같이 사용한 결과는 다음과 같습니다.
+
+![Tomek_and_CNN](/assets/img/post_img/Tomek_and_CNN.png)_After TomekLink & CNN processing data Scatter Plot_
+
+
+
+
+
+
+
+
 ### Mixed Sampling
 
 - SMOTE + Tomek Links
@@ -229,5 +423,6 @@ Undersampling도 앞의 세 가지 경우와 비슷합니다. 구체적으로 �
 [^10]: https://ieeexplore.ieee.org/document/4309137
 [^11]: https://sci2s.ugr.es/keel/pdf/algorithm/congreso/kubat97addressing.pdf
 [^12]: https://link.springer.com/chapter/10.1007/3-540-48229-6_9
+[^13]: https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/imblearn/under_sampling/_prototype_selection/_condensed_nearest_neighbour.py
 
 
