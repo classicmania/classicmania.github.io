@@ -8,7 +8,7 @@ math: true
 comments: true
 ---
 
-![Imbalanced_image](/assets/img/post_img/Imbalanced_image.jpg)_Cute imbalanced image_
+![Imbalanced_image](/assets/img/post_img/Imbalanced_image.jpg)_Cute imbalanced image[^1]_
 
 <br>
 
@@ -115,6 +115,46 @@ $$
 
 <br/> 
 
+### ROC curve 
+
+ROC curve는 양성 클래스의 이진 분류 모델의 성능을 요약해주는 그래프입니다. X축은 FPR(False Positive Rate)이고 Y축은 TPR(True Positive Rate)입니다. 먼저 TPR과 FPR을 살펴 보겠습니다.
+
+<br/> 
+
+$$
+TPR = \frac {TP}{TP+FN} 
+$$
+
+<br/> 
+
+$$
+FPR = \frac {FP}{FP+TN} 
+$$
+
+<br/> 
+
+TPR은 양성 클래스를 얼마나 잘 예측한지를 알려줍니다.FPR은 전체 음성 클래스에서 양성으로 잘못 예측할 비율을 의미합니다. TPR을 FPR로 나눴을 경우 다음과 같습니다.
+
+<br/> 
+
+$$
+\frac{(\frac {TP}{TP+FN})}{(\frac {FP}{FP+TN})} = \frac{TP \times (FP+TN)}{ FP \times (TP+FN)} 
+$$
+
+<br/> 
+
+양성 클래스(TP+FN)와 음성 클래스(FP+TN)는 이미 상수이므로 ROC값을 변화시키는 것은 TP와 FP입니다. 하지만 TP와 FP는 Threshold에 따라 달라집니다. 그러므로 양성 클래스의 분포와 음성 클래스의 분포에 따라서 ROC AUC를 다음과 같이 그릴 수 있을 것입니다.
+<br/> 
+
+![ROC_curve_best1](/assets/img/post_img/ROC_curve_best1.png)_Best ROC curve dist[^4]_ ![ROC_curve_best2](/assets/img/post_img/ROC_curve_best2.png)_Best ROC AUC_
+
+![ROC_curve_mid1](/assets/img/post_img/ROC_curve_mid1.png)_General curve dist_ ![ROC_curve_mid2](/assets/img/post_img/ROC_curve_mid2.png)_General ROC AUC_
+
+![ROC_curve_501](/assets/img/post_img/ROC_curve_501.png)_ROC half curve dist_ ![ROC_curve_502](/assets/img/post_img/ROC_curve_502.png)_half ROC UC_
+
+![ROC_curve_worst1](/assets/img/post_img/ROC_curve_worst1.png)_ROC worst curve dist_ ![ROC_curve_worst2](/assets/img/post_img/ROC_curve_worst2.png)_Worst ROCAUC_
+
+
 ### Precision-Recall Metrics
 
 수식상으로 Precision과 Recall을 살펴보면 다음과 같습니다.
@@ -136,17 +176,28 @@ $$
  수식의 의미를 사기 탐지 태스크와 이탈 예측 태스크에 각각 맞추어서 살펴보겠습니다.  사기 탐지 태스크에서 정밀도의 의미는 해당 클래스가 '사기'로  예측하였을 때 실제로 사기일 비율을 의미합니다. 이와 유사하게 **이탈 예측 태스크에서 정밀도의 의미는 해당 클래스가 '이탈'로 예측하였을 때 실제로 '이탈'을 할 비율**을 뜻합니다.  
  <br/>
   재현율은 수식상으로 민감도와 같습니다. 사기 탐지 태스크에서 재현율은 해당 클래스가 실제로 '사기'일 때 사기로 예측할 확률을 말합니다. **이탈 예측 태스크에서는 실제로 '이탈'일 때 이탈로 예측할 비율**을 의미합니다.    
- <br/> 
-수식에서 알 수 있듯이 정밀도와 재현율은 일반적으로 다음과 같이 표현될 것입니다.
 
-![Precision_Recall_Curve_image1](/assets/img/post_img/Precision_Recall_Curve_image1.png)_General Precision-Recall Curve[^4]_
+ <br/> 
+
+수식에서 알 수 있듯이 정밀도와 재현율의 관계는 다음과 같습니다.
+
+$$
+\frac{(\frac {TP}{TP+FP})}{(\frac {TP}{TP+FN})} = \frac{TP \times (TP+FN)}{ TP \times (TP+FP)} = \frac{TP+FN}{TP+FP}
+$$
+
+ROC curve와 마찬가지로 Threshold를 설정함에 따라서 값이 달라집니다. 하지만 음성 클래스와 양성 클래스를 모두 고려하는 ROC curve와 다르게 PR curve는 소수 클래스인 양성 클래스만을 고려합니다. 이 점을 고려할 때 실무적으로 굉장히 Skewed한 클래스 분포를 가지면서 ROC AUC가 너무 높은 값을 가졌을 때 소수 클래스에 초점을 맞춘 PR AUC를 확인하여 분류 모델의 성능을 종합적으로 확인할 수 있습니다. 
+
+<br/> 
+
+Recall-Precision을 그래프로 그리고 다음과 같은 경우가 있을 것입니다. 
+
+![Precision_Recall_Curve_image1](/assets/img/post_img/Precision_Recall_Curve_image1.png)_General Precision-Recall Curve[^5]_
  
  모델의 성능이 아주 뛰어나거나 안좋으면 다음과 같이 그려질 것입니다.
  
 ![Precision_Recall_Curve_image2](/assets/img/post_img/Precision_Recall_Curve_image2.png)_Best Precision-Recall Curve_ 
 
 ![Precision_Recall_Curve_image3](/assets/img/post_img/Precision_Recall_Curve_image3.png)_Worst Precision-Recall Curve_ 
-
 
 <br>
 
@@ -168,7 +219,7 @@ ___________________
 
 RUS에 대한 이미지를 살펴보면 다음과 같습니다.
 
-![random_undersampling_image](/assets/img/post_img/random_undersampling_image.png)_RUS_[^5]
+![random_undersampling_image](/assets/img/post_img/random_undersampling_image.png)_RUS_[^6]
 
 #### Random Oversampling
 - 소수 클래스의 데이터 중에서 일정한 수를 랜덤하게 선택하여 다수 클래스의 수만큼 복제하는 기법입니다.
@@ -177,7 +228,7 @@ RUS에 대한 이미지를 살펴보면 다음과 같습니다.
 - 이런 악영향을 방지하기 위해서 Raw data에 예측 모델과 Random Oversapling을 적용한 데이터에 적합시킨 예측 모델간의 성능을 비교할 필요가 있습니다.
 
 
-![random_oversampling_image](/assets/img/post_img/Oversampling_image.jpeg)_ROS_{: width="200" height="500"}[^6]
+![random_oversampling_image](/assets/img/post_img/Oversampling_image.jpeg)_ROS_{: width="200" height="500"}[^7]
 
 ### Undersampling
 
@@ -199,22 +250,22 @@ RUS에 대한 이미지를 살펴보면 다음과 같습니다.
 
 Undersampling도 앞의 세 가지 경우와 비슷합니다. 구체적으로 다음과 같이 기법을 세분화할 수 있습니다. 세부적인 Sampling 기법의 방법들에 대해 알고 싶으시면 아래 주석의 논문들을 참고하시길 바랍니다.
 - 유지할 데이터를 선택하는 방법
-	- Near Miss Undersampling[^7]	
-		- NearMiss-1 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 작은 세 개의 샘플을 뽑습니다.
-		-  NearMiss-2 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 먼 세 개의 샘플을 뽑습니다.
+	- Near Miss Undersampling[^8]	
+		- NearMiss-1 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 작은 k개의 샘플을 뽑습니다.
+		-  NearMiss-2 : 소수 클래스로부터 다수 클래스의 샘플들 중 가장 평균 거리가 먼 k개의 샘플을 뽑습니다.
 		-  NearMiss-3 : 소수의 클래스의 개별 샘플로부터 가장 거리가 가까운 샘플들을 뽑습니다.
-	- Condensed Nearest Neighbor Rule[^8] 
-		- CNN기법은 모델의 성능에 해를 끼치지 않는 데이터의 부분집합을 찾는 방법입니다.	
+	- Condensed Nearest Neighbor Rule[^9] 
+		- CNN기법은 모델의 성능에 해를 끼치지 않는 데이터의 부분집합을 찾는 방법입니다.
 		- 자세한 내용은 아래의 코드와 함께 설명하였습니다.
 
 	
 - 제거할 데이터를 선택하는 방법
-	- Tomek Links[^9]
-	- ENN(Edited Nearest Neighbor Rule)[^10] 	
+	- Tomek Links[^10]
+	- ENN(Edited Nearest Neighbor Rule)[^11] 	
 - 첫번째와 두번째를 적절히 섞은 방법
-	- One-Sided Selection[^11]
+	- One-Sided Selection[^12]
 		-  Tomek Links -> CNN
-	- Neighborhood Cleansing Rule[^12]
+	- Neighborhood Cleansing Rule[^13]
 		-  CNN -> ENN
 	
 <br/>
@@ -253,7 +304,7 @@ Counter({0: 9001, 1: 999})
 
 ##### Condensed nearest neighbour
 
-다음은 imbalanced-learn library에서 Condensed nearest neighbour[^13]를 구현한 코드입니다. 코드 내용을 통해 CNN은 다음과 같이 동작함을 알 수 있습니다.
+다음은 imbalanced-learn library에서 Condensed nearest neighbour[^14]를 구현한 코드입니다. 코드 내용을 통해 CNN은 다음과 같이 동작함을 알 수 있습니다.
 
 - Random Seed를 설정한 후 다수 클래스에서 하나의 샘플을 임의적으로 추출합니다.
 - 모든 소수 클래스의 샘플들과 앞에서 추출한 샘플을 사용하여 하나의 부분집합(C)을 생성합니다.
@@ -397,11 +448,6 @@ Counter({0: 8953, 1: 999})
 
 
 
-
-
-
-
-
 ### Mixed Sampling
 
 - SMOTE + Tomek Links
@@ -413,16 +459,18 @@ Counter({0: 8953, 1: 999})
 
 [^1]: https://medium.com/@kr.vishwesh54/a-creative-way-to-deal-with-class-imbalance-without-generating-synthetic-samples-4cfad099d405
 [^2]: https://www.math.ucdavis.edu/~saito/data/roc/ferri-class-perf-metrics.pdf
-[^3]: https://www.appsflyer.com/blog/click-flooding-detection-false-positive-challenge/
-[^4]: https://towardsdatascience.com/gaining-an-intuitive-understanding-of-precision-and-recall-3b9df37804a7
-[^5]: https://www.researchgate.net/figure/llustration-of-random-undersampling-technique_fig3_343326638
-[^6]: https://medium.com/@patiladitya81295/dealing-with-imbalance-data-1bacc7d68dff
-[^7]: https://www.site.uottawa.ca/~nat/Workshop2003/jzhang.pdf
-[^8]: https://ieeexplore.ieee.org/document/1054155
-[^9]: https://ieeexplore.ieee.org/document/4309452
-[^10]: https://ieeexplore.ieee.org/document/4309137
-[^11]: https://sci2s.ugr.es/keel/pdf/algorithm/congreso/kubat97addressing.pdf
-[^12]: https://link.springer.com/chapter/10.1007/3-540-48229-6_9
-[^13]: https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/imblearn/under_sampling/_prototype_selection/_condensed_nearest_neighbour.py
+[^3]: https://towardsdatascience.com/understanding-auc-roc-curve-68b2303cc9c5
+[^4]: https://www.appsflyer.com/blog/click-flooding-detection-false-positive-challenge/
+[^5]: https://towardsdatascience.com/gaining-an-intuitive-understanding-of-precision-and-recall-3b9df37804a7
+[^6]: https://www.researchgate.net/figure/llustration-of-random-undersampling-technique_fig3_343326638
+[^7]: https://medium.com/@patiladitya81295/dealing-with-imbalance-data-1bacc7d68dff
+[^8]: https://www.site.uottawa.ca/~nat/Workshop2003/jzhang.pdf
+[^9]: https://ieeexplore.ieee.org/document/1054155
+[^10]: https://ieeexplore.ieee.org/document/4309452
+[^11]: https://ieeexplore.ieee.org/document/4309137
+[^12]: https://sci2s.ugr.es/keel/pdf/algorithm/congreso/kubat97addressing.pdf
+[^13]: https://link.springer.com/chapter/10.1007/3-540-48229-6_9
+[^14]: https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/imblearn/under_sampling/_prototype_selection/_condensed_nearest_neighbour.py
+
 
 
