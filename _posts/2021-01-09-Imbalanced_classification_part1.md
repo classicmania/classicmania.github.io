@@ -1,5 +1,5 @@
 ---
-title: Imbalanced data classification part1
+title: imbalanced data classification part1
 author: Kwon Suncheol
 categories: [ML]
 tags: [Imbalanced_data,Churn_prediction,Classification,Data_sampling,Evaluation_metric]
@@ -122,7 +122,7 @@ ROC curve는 양성 클래스의 이진 분류 모델의 성능을 요약해주�
 <br/> 
 
 $$
-TPR = \frac {TP}{TP+FN} 
+TPR = \frac {TP}{TP+FN}
 $$
 
 <br/> 
@@ -143,7 +143,7 @@ $$
 
 <br/> 
 
-양성 클래스(TP+FN)와 음성 클래스(FP+TN)는 이미 상수이므로 ROC값을 변화시키는 것은 TP와 FP입니다. 하지만 TP와 FP는 Threshold에 따라 달라집니다. 그러므로 양성 클래스의 분포와 음성 클래스의 분포에 따라서 ROC AUC를 다음과 같이 그릴 수 있을 것입니다.
+양성 클래스(TP+FN)와 음성 클래스(FP+TN)는 이미 상수이므로 ROC값을 변화시키는 것은 TP와 FP입니다. 하지만 TP와 FP는 Threshold에 따라 달라집니다. 그러므로 실제 클래스 및 모델 예측값의 분포 관계에 따라서 ROC AUC를 다음과 같이 그릴 수 있을 것입니다.
 <br/> 
 
 ![ROC_curve_best1](/assets/img/post_img/ROC_curve_best1.png)_Best ROC curve dist[^4]_ ![ROC_curve_best2](/assets/img/post_img/ROC_curve_best2.png)_Best ROC AUC_
@@ -229,6 +229,10 @@ RUS에 대한 이미지를 살펴보면 다음과 같습니다.
 
 
 ![random_oversampling_image](/assets/img/post_img/Oversampling_image.jpeg)_ROS_{: width="200" height="500"}[^7]
+
+
+<br/>
+
 
 ### Undersampling
 
@@ -447,6 +451,123 @@ Counter({0: 8953, 1: 999})
 ![Tomek_and_CNN](/assets/img/post_img/Tomek_and_CNN.png)_After TomekLink & CNN processing data Scatter Plot_
 
 
+<br/>
+
+### Oversampling
+
+- Oversampling 기법은 불균형 데이터의 분포를 처리할 때 소수 클래스를 다수 클래스의 샘플 수에 맞추어 늘리는 방법입니다.
+-   제일 간단한 방법은 소수 클래스의 샘플을 단순하게 복제하는 것입니다. 다만 이럴 경우 학습하려는 모델에 어떤 새로운 정보를 제공할 수 없습니다.
+-   대신에 소수 클래스에 대하여 새로운 정보를 주면서 augmentation하는 기법 중 SMOTE(Synthetic Minority Oversampling Technique)[^15]가 있습니다.
+
+#### SMOTE
+
+다음은 imbalanced-learn library에서 SMOTE를 구현한 코드입니다. 위의 논문 내용과 코드를 통해 SMOTE는 다음과 같이 동작함을 알 수 있습니다.
+
+-  먼저 소수 클래스의 샘플들을 랜덤으로 선택합니다.
+-  선택된 임의의 개별적인 샘플[S1]에서 Featrue Space에서 거리가 가장 가까우면서 소수 클래스에 속한 k개의 샘플들[S2]을 선택합니다.
+-  S1과 S2를 직선으로 연결한 후 그 직선상에서 새로운 데이터를 생성합니다.
+
+```python
+def _validate_estimator(self):
+    super()._validate_estimator()
+    self.nn_m_ = check_neighbors_object(
+        "m_neighbors", self.m_neighbors, additional_neighbor=1
+    )
+    self.nn_m_.set_params(**{"n_jobs": self.n_jobs})
+    if self.kind not in ("borderline-1", "borderline-2"):
+        raise ValueError(
+            'The possible "kind" of algorithm are '
+            '"borderline-1" and "borderline-2".'
+            "Got {} instead.".format(self.kind)
+        )
+
+def _fit_resample(self, X, y):
+    self._validate_estimator()
+
+    X_resampled = X.copy()
+    y_resampled = y.copy()
+
+    for class_sample, n_samples in self.sampling_strategy_.items():
+        if n_samples == 0:
+            continue
+        target_class_indices = np.flatnonzero(y == class_sample)
+        X_class = _safe_indexing(X, target_class_indices)
+
+        self.nn_m_.fit(X)
+        danger_index = self._in_danger_noise(
+            self.nn_m_, X_class, class_sample, y, kind="danger"
+        )
+        if not any(danger_index):
+            continue
+
+        self.nn_k_.fit(X_class)
+        nns = self.nn_k_.kneighbors(
+            _safe_indexing(X_class, danger_index), return_distance=False
+        )[:, 1:]
+
+        # divergence between borderline-1 and borderline-2
+        if self.kind == "borderline-1":
+            # Create synthetic samples for borderline points.
+            X_new, y_new = self._make_samples(
+                _safe_indexing(X_class, danger_index),
+                y.dtype,
+                class_sample,
+                X_class,
+                nns,
+                n_samples,
+            )
+            if sparse.issparse(X_new):
+                X_resampled = sparse.vstack([X_resampled, X_new])
+            else:
+                X_resampled = np.vstack((X_resampled, X_new))
+            y_resampled = np.hstack((y_resampled, y_new))
+
+        elif self.kind == "borderline-2":
+            random_state = check_random_state(self.random_state)
+            fractions = random_state.beta(10, 10)
+
+            # only minority
+            X_new_1, y_new_1 = self._make_samples(
+                _safe_indexing(X_class, danger_index),
+                y.dtype,
+                class_sample,
+                X_class,
+                nns,
+                int(fractions * (n_samples + 1)),
+                step_size=1.0,
+            )
+
+            # we use a one-vs-rest policy to handle the multiclass in which
+            # new samples will be created considering not only the majority
+            # class but all over classes.
+            X_new_2, y_new_2 = self._make_samples(
+                _safe_indexing(X_class, danger_index),
+                y.dtype,
+                class_sample,
+                _safe_indexing(X, np.flatnonzero(y != class_sample)),
+                nns,
+                int((1 - fractions) * n_samples),
+                step_size=0.5,
+            )
+
+            if sparse.issparse(X_resampled):
+                X_resampled = sparse.vstack(
+                    [X_resampled, X_new_1, X_new_2]
+                )
+            else:
+                X_resampled = np.vstack((X_resampled, X_new_1, X_new_2))
+            y_resampled = np.hstack((y_resampled, y_new_1, y_new_2))
+
+    return X_resampled, y_resampled
+```
+
+
+- 위와 같은 순서로 말미암아 다음과 같이 SMOTE의 장단점을 찾을 수 있습니다.
+	-  새로운 정보를 제공해서 학습시키려는 모델이 결정 경계를 효율적으로 배울 수 있도록 합니다.
+	-  단순히 Undersampling 기법만 적용한는 것보다 SMOTE와 Under Sampling을 같이 활용할 때 모델 성능이 올라갑니다.
+	-  음성 클래스와 양성 클래스의 예측값과 실제값의 분포가 많이 겹칠 경우 SMOTE를 통한 오버샘플링된 샘플들이 오히려 결정 경계를 모호하게 만들 수 있습니다.
+
+<br/>
 
 ### Mixed Sampling
 
@@ -463,7 +584,7 @@ Counter({0: 8953, 1: 999})
 [^4]: https://www.appsflyer.com/blog/click-flooding-detection-false-positive-challenge/
 [^5]: https://towardsdatascience.com/gaining-an-intuitive-understanding-of-precision-and-recall-3b9df37804a7
 [^6]: https://www.researchgate.net/figure/llustration-of-random-undersampling-technique_fig3_343326638
-[^7]: https://medium.com/@patiladitya81295/dealing-with-imbalance-data-1bacc7d68dff
+[^7]: https://medium.com/@patiladitya81295/dealing-with-imbalance-data-1bacc7d68dff10302/24590&hl=ko&sa=X&ei=xSoBYJS3GpCbywTT47Uw&scisig=AAGBfm0zNdcfXdPynWxoQ3FsFum2KdF9ow&nossl=1&oi=scholarr
 [^8]: https://www.site.uottawa.ca/~nat/Workshop2003/jzhang.pdf
 [^9]: https://ieeexplore.ieee.org/document/1054155
 [^10]: https://ieeexplore.ieee.org/document/4309452
@@ -471,6 +592,5 @@ Counter({0: 8953, 1: 999})
 [^12]: https://sci2s.ugr.es/keel/pdf/algorithm/congreso/kubat97addressing.pdf
 [^13]: https://link.springer.com/chapter/10.1007/3-540-48229-6_9
 [^14]: https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/imblearn/under_sampling/_prototype_selection/_condensed_nearest_neighbour.py
-
-
+[^15]: http://scholar.google.co.kr/scholar_url?url=https://www.jair.org/index.php/jair/article/download/
 
