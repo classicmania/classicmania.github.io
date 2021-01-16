@@ -1,5 +1,5 @@
 ---
-title: imbalanced data classification part1
+title: Imbalanced data classification part1
 author: Kwon Suncheol
 categories: [ML]
 tags: [Imbalanced_data,Churn_prediction,Classification,Data_sampling,Evaluation_metric]
@@ -15,8 +15,10 @@ comments: true
  지도학습에서 분류 문제를 다룰 때 Imbalanced classification인 경우가 많았습니다. 예를 들어 이커머스 데이터를 활용하여 개별적인 고객의 이탈을 예측하는 모델을 만들 때 위의 문제를 발견할 수 있었습니다. **실무에서 이탈 예측 태스크를 진행하면서 '불균형 데이터를 어떻게 다룰 것인가'에 대하여 생각한 것들을 두 개의 블로그 컨텐츠로 정리하는 시간을 가졌습니다.** 해당 글은 그 중 첫번째 글입니다. 
 
 
+
 ## Imbalanced data
 ___________________
+
 
 ### Definition of Imbalanced data 
 
@@ -46,7 +48,7 @@ ___________________
 
 <br/>
 
-세 가지 분류 지표군들에서 Train data와 Test data간의 분포가 비슷하다고 가정하는 'Threshold Metrics'를 알아보겠습니다.
+세 가지 분류 지표군들에서 Train data와 Test data간의 분포가 비슷하다고 가정할 때 사용되는 'Threshold Metrics'를 알아보겠습니다.
 
 ### Threshold Metrics
 
@@ -316,6 +318,8 @@ Counter({0: 9001, 1: 999})
 - Set C를 KNN에 적합시킨 후 모델이 제대로 분류한 샘플들은 고르지 않고 제대로 분류되지 않은 샘플들을 C에 Append시킵니다.
 - 해당 알고리즘은 이중 for문을 쓰는 구조이므로 knn의 하이퍼 파라미터를 작게 해주는 것이 일반적으로 좋습니다.
 
+<br/> 
+
 ```python
 def _fit_resample(self, X, y):
     self._validate_estimator()
@@ -461,11 +465,24 @@ Counter({0: 8953, 1: 999})
 
 #### SMOTE
 
-다음은 imbalanced-learn library에서 SMOTE를 구현한 코드입니다. 위의 논문 내용과 코드를 통해 SMOTE는 다음과 같이 동작함을 알 수 있습니다.
+다음은 imbalanced-learn library에서 SMOTE를 구현한 코드입니다. 위의 논문 및 Borderline 관련 추가 논문[^16]과 코드를 통해 SMOTE는 다음과 같이 동작함을 알 수 있습니다.
 
 -  먼저 소수 클래스의 샘플들을 랜덤으로 선택합니다.
 -  선택된 임의의 개별적인 샘플[S1]에서 Featrue Space에서 거리가 가장 가까우면서 소수 클래스에 속한 k개의 샘플들[S2]을 선택합니다.
 -  S1과 S2를 직선으로 연결한 후 그 직선상에서 새로운 데이터를 생성합니다.
+	- 직선상에 생성된 샘플은 직선과 거리가 먼 샘플보다 오분류가 될 가능성이 더 높습니다. 
+	- 다시 말해서 거리가 먼 샘플들은 KNN 알고리즘에 따라소수 클래스보다 다수 클래스에 속할 가능성이 높을 때 오분류의 가능성이 높은 Danger 샘플로 간주됩니다. 
+		- borderline-SMOTE1 : Danger 샘플과 소수 클래스 간의 거리차이의 가중치를 0~1로 줍니다.
+		- borderline-SMOTE2 : Danger 샘플과 소수 클래스 간의 거리차이의 가중치를 0~0.5로 줍니다. 그래서 'borderline-SMOTE1'보다 더 가까운 샘플들을 생성합니다.
+	-  신기하게도 SMOTE 알고리즘의 객체를 소수 클래스가 아닌 다수 클래스에 적용을 해도 같은 현상이 발견될 수 있습니다.  
+
+ 
+ <br/> 
+ 
+ ![SmoteImage](/assets/img/post_img/SMOTE_image.png)_SMOTE Image_
+ 
+ <br/> 
+
 
 ```python
 def _validate_estimator(self):
@@ -593,4 +610,5 @@ def _fit_resample(self, X, y):
 [^13]: https://link.springer.com/chapter/10.1007/3-540-48229-6_9
 [^14]: https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/imblearn/under_sampling/_prototype_selection/_condensed_nearest_neighbour.py
 [^15]: http://scholar.google.co.kr/scholar_url?url=https://www.jair.org/index.php/jair/article/download/
+[^16]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.308.9315&rep=rep1&type=pdf
 
