@@ -15,7 +15,6 @@ comments: true
  지도학습에서 분류 문제를 다룰 때 Imbalanced classification인 경우가 많았습니다. 예를 들어 이커머스 데이터를 활용하여 개별적인 고객의 이탈을 예측하는 모델을 만들 때 위의 문제를 발견할 수 있었습니다. **실무에서 이탈 예측 태스크를 진행하면서 '불균형 데이터를 어떻게 다룰 것인가'에 대하여 생각한 것들을 두 개의 블로그 컨텐츠로 정리하는 시간을 가졌습니다.** 해당 글은 그 중 첫번째 글입니다. 
 
 
-
 ## Imbalanced data
 ___________________
 
@@ -146,16 +145,26 @@ $$
 <br/> 
 
 양성 클래스(TP+FN)와 음성 클래스(FP+TN)는 이미 상수이므로 ROC값을 변화시키는 것은 TP와 FP입니다. 하지만 TP와 FP는 Threshold에 따라 달라집니다. 그러므로 실제 클래스 및 모델 예측값의 분포 관계에 따라서 ROC AUC를 다음과 같이 그릴 수 있을 것입니다.
+
 <br/> 
+
 
 ![ROC_curve_best1](/assets/img/post_img/ROC_curve_best1.png)_Best ROC curve dist[^4]_ ![ROC_curve_best2](/assets/img/post_img/ROC_curve_best2.png)_Best ROC AUC_
 
+
+<br/> 
+
 ![ROC_curve_mid1](/assets/img/post_img/ROC_curve_mid1.png)_General curve dist_ ![ROC_curve_mid2](/assets/img/post_img/ROC_curve_mid2.png)_General ROC AUC_
+
+<br/> 
 
 ![ROC_curve_501](/assets/img/post_img/ROC_curve_501.png)_ROC half curve dist_ ![ROC_curve_502](/assets/img/post_img/ROC_curve_502.png)_half ROC UC_
 
+<br/> 
+
 ![ROC_curve_worst1](/assets/img/post_img/ROC_curve_worst1.png)_ROC worst curve dist_ ![ROC_curve_worst2](/assets/img/post_img/ROC_curve_worst2.png)_Worst ROCAUC_
 
+<br/> 
 
 ### Precision-Recall Metrics
 
@@ -470,7 +479,7 @@ Counter({0: 8953, 1: 999})
 -  먼저 소수 클래스의 샘플들을 랜덤으로 선택합니다.
 -  선택된 임의의 개별적인 샘플[S1]에서 Featrue Space에서 거리가 가장 가까우면서 소수 클래스에 속한 k개의 샘플들[S2]을 선택합니다.
 -  S1과 S2를 직선으로 연결한 후 그 직선상에서 새로운 데이터를 생성합니다.
-	- 직선상에 생성된 샘플은 직선과 거리가 먼 샘플보다 오분류가 될 가능성이 더 높습니다. 
+	- 일반적으로 직선상에 생성된 샘플은 직선과 거리가 먼 샘플보다 오분류가 될 가능성이 더 높습니다. 
 	- 다시 말해서 거리가 먼 샘플들은 KNN 알고리즘에 따라소수 클래스보다 다수 클래스에 속할 가능성이 높을 때 오분류의 가능성이 높은 Danger 샘플로 간주됩니다. 
 		- borderline-SMOTE1 : Danger 샘플과 소수 클래스 간의 거리차이의 가중치를 0~1로 줍니다.
 		- borderline-SMOTE2 : Danger 샘플과 소수 클래스 간의 거리차이의 가중치를 0~0.5로 줍니다. 그래서 'borderline-SMOTE1'보다 더 가까운 샘플들을 생성합니다.
@@ -584,7 +593,12 @@ def _fit_resample(self, X, y):
 	-  단순히 Undersampling 기법만 적용한는 것보다 SMOTE와 Under Sampling을 같이 활용할 때 모델 성능이 올라갑니다.
 	-  음성 클래스와 양성 클래스의 예측값과 실제값의 분포가 많이 겹칠 경우 SMOTE를 통한 오버샘플링된 샘플들이 오히려 결정 경계를 모호하게 만들 수 있습니다.
 
+
+#### ADASYN
+
+
 <br/>
+
 
 ### Mixed Sampling
 
