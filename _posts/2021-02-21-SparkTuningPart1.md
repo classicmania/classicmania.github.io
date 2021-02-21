@@ -172,5 +172,14 @@ min Partition Size :  0
 
 Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은 데이터가 있어야 합니다. 만약 그렇지 않으면 주어진 키의 갯수와 파티션 내의 데이터를 맞추는 작업을 하는데 많은 비용이 발생합니다.  CrossJoin을 함에 있어서 같은 데이터프레임을 활용하고 있으므로 앞에서 살펴본 crossJoin의 첫번째 경우와 같습니다. 다시 말해서 파티션의 크키의 변동이 없음을 확인할 수 있습니다. 
 
+<br/>
+
+하지만 새로운 고객군을 기존 데이터프레임과 합칠 때 개별적인 파티션의 크기 차이의 심화로 이후의 작업에서 연산 속도가 느림을 발견할 수 있었습니다. 그래서 드라이버의 maxResultSize를 1024가 아닌 더 높은 값으로 설정하여 Stage Failure를 막으면서 new_user_df와 df의 파티션의 수를 최적화하고 Garbage Collection Tuning을 한 결과 어플리케이션의 실행 시간을 단축할 수 있었습니다. 
+ 
+<br>
+
+## Reference
+[^1]: https://clevertap.com/blog/automate-user-segmentation-with-rfm-analysis/
+[^2]: https://towardsdatascience.com/strategies-of-spark-join-c0e7b4572bcf
 
  
