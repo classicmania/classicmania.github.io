@@ -89,6 +89,88 @@ ___________________
 
 전체 고객군에 관한 분포의 왜곡 현상을 고려하여 'New User'군과 다른 군들을 나뉘어 RFM 모델을 독립적으로 적용하였습니다 . 독립적인 연산 과정 후 각 군들을 합친 후 통계량을 내는 부분에 있어서 스파크 파티션의 'Data Skewness'를 발견할 수 있었습니다. 
 
+```python
+df.cache()
+new_user_df = df.filter(df['max_sessionSeq'] == 1)
+new_user_df = new_user_df.drop('max_sessionSeq', 'frequency', 'recency')
+new_user_df = new_user_df.withColumn('segmentation', lit("00")) \
+        .select('cookieId', 'segmentation', 'monetary','session_frequency', 'recency_date')
+        
+print('New User Partition Size')
+df_length = new_user_df.rdd.glom().map(len).collect()
+print(df_length)
+print('All partitino Size in ', len(df_length))
+print('max Partition Size : ', pa.max(df_length))
+print('min Partition Size : ', pa.min(df_length))
+```
+
+```
+[35287, 34389, 35438, 34416, 34564, 34982, 35383, 35342, 34667, 34272, 35282, 34464, 34409, 34453, 35122, 35143, 35321, 35238, 34568, 34456, 34455, 34457, 34428, 34116, 35194, 12446]
+All partitino Size in  26
+max Partition Size :  35438
+min Partition Size :  12446
+```
+
+```python
+print('Before First Cross Join')
+df_length = df.rdd.glom().map(len).collect()
+print(df_length)
+print('All partitino Size in ', len(df_length))
+print('max Partition Size : ', pa.max(df_length))
+print('min Partition Size : ', pa.min(df_length))
+```
+
+```
+All partitino Size in  1000
+max Partition Size :  13
+min Partition Size :  0
+```
+
+```python
+df = df.select(mean('frequency').alias('mean_frequency'),
+               stddev('frequency').alias('std_frequency'),
+               mean('monetary').alias('mean_monetary'),
+               stddev('monetary').alias('std_monetary'),
+               mean('recency').alias('mean_recency'),
+               stddev('recency').alias('std_recency')
+               ) \
+    .crossJoin(df) \
+    .withColumn('scaled_frequency', (col('frequency') - col('mean_frequency')) / col('std_frequency')) \
+    .withColumn('scaled_monetary', (col('monetary') - col('mean_monetary')) / col('std_monetary')) \
+    .withColumn('scaled_recency', (col('recency') - col('mean_recency')) / col('std_recency'))
+    
+print('After first Cross Join & Preprocessing before second cross join')
+df_length = df.rdd.glom().map(len).collect()
+print('All partitino Size in ', len(df_length))
+print('max Partition Size : ', pa.max(df_length))
+print('min Partition Size : ', pa.min(df_length))
+```
+```
+All partitino Size in  1000
+max Partition Size :  13
+min Partition Size :  0
+```
+
+```python
+new_user_df = new_user_df.select('cookieId', 'session_frequency', 'monetary', 'recency_date', 'segmentation')
+result = df.union(new_user_df)
+df.unpersist()
+
+print('After Union cross join')
+df_length = result.rdd.glom().map(len).collect()
+print('All partitino Size in ', len(df_length))
+print('max Partition Size : ', pa.max(df_length))
+print('min Partition Size : ', pa.min(df_length))
+```
+```
+All partitino Size in  2000
+max Partition Size :  971
+min Partition Size :  0
+```
+
+<br/>
+
+Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은 데이터가 있어야 합니다. 만약 그렇지 않으면 주어진 키의 갯수와 파티션 내의 데이터를 맞추는 작업을 하는데 많은 비용이 발생합니다.  CrossJoin을 함에 있어서 같은 데이터프레임을 활용하고 있으므로 앞에서 살펴본 crossJoin의 첫번째 경우와 같습니다. 다시 말해서 파티션의 크키의 변동이 없음을 확인할 수 있습니다. 
 
 
  
