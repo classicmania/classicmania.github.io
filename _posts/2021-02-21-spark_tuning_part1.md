@@ -1,5 +1,5 @@
 ---
-title: Spark Tuning part1
+title: Spark tuning에 관한 몇 가지 발견들
 author: Kwon Suncheol
 categories: [Spark]
 tags: [Spark,RDD,Negative_sampling,Data_sampling,Spark_tuning,RFM]
