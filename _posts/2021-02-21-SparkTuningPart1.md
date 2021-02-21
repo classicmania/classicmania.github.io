@@ -179,6 +179,7 @@ Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은
 <br>
 
 ## Reference
+
 [^1]: https://clevertap.com/blog/automate-user-segmentation-with-rfm-analysis/
 [^2]: https://towardsdatascience.com/strategies-of-spark-join-c0e7b4572bcf
 
