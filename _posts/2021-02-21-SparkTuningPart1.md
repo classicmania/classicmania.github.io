@@ -82,7 +82,7 @@ ___________________
  
  <br/>
  
-![spark](/assets/img/post_img/RFM_clevertap.png)_RFM_segmentation_
+![spark](/assets/img/post_img/RFM_clevertap.png)
 
 <br/>
 
