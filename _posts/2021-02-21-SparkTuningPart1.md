@@ -60,11 +60,11 @@ ___________________
  
  <br/>
  
-![Broadcast_join_spark](/assets/img/post_img/Broadcast_join_spark.jpeg)_Broadcast_hash _join_
+![Broadcast_join_spark](/assets/img/post_img/Broadcast_join_spark.jpeg)_Broadcast_hash_join_
 
  <br/>
 
-![Shuffle_hash_join_spark](/assets/img/post_img/Shuffle_Hash_join_spark.jpeg)_Shuffle hash join_
+![Shuffle_hash_join_spark](/assets/img/post_img/Shuffle_Hash_join_spark.jpeg)_Shuffle hash_join_
 
  <br/> 
  
@@ -176,7 +176,9 @@ Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은
 
 하지만 새로운 고객군을 기존 데이터프레임과 합칠 때 개별적인 파티션의 크기 차이의 심화로 이후의 작업에서 연산 속도가 느림을 발견할 수 있었습니다. 그래서 드라이버의 maxResultSize를 1024가 아닌 더 높은 값으로 설정하여 Stage Failure를 막으면서 new user df와 df의 파티션의 수를 최적화하고 Garbage Collection Tuning을 한 결과 어플리케이션의 실행 시간을 단축할 수 있었습니다. 
  
-<br>
+
+## Reference
+
 
 
 
