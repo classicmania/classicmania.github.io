@@ -68,7 +68,7 @@ ___________________
 
  <br/> 
  
- 특히 Cross Join을 시행할 때는 두 가지 경우의 수가 있을 것입니다.<br/>
+ 특히 Cross Join을 시행할 때는 두 가지 경우의 수가 있을 것입니다. <br/>
  - Small DataFrame Cross Join  
 	 - 만약 Join의 대상이 크지 않을 경우 데이터프레임의 파티션은 다음과 같을 것입니다.   
 	 - \\(\ N(Partitions) \,of \,left \,DF = \,N(Partitions) \,of \,right \,DF = N(Partitions) \,after \,crossJoin \,DF\\)  
@@ -79,7 +79,7 @@ ___________________
 
 ### Data preprocessing in RFM
 
- RFM 모델은 이커머스상에서 활동한 고객 행동 데이터 중 R(Recency), F(Frequency), M(Monetary value)를 인자로 사용하여 고객을 세분화합니다.  최종적인 결과는 아래의 이미지와 유사하지만 Monetary value가 추가적으로 포함된다는 점과 내부적인 고객 세분화와 연관된 연산 과정이 다릅니다. 
+ 간단한 배경 설명을 하고 스파크 튜닝 부분을 전개하겠습니다. RFM 모델은 이커머스상에서 활동한 고객 행동 데이터 중 R(Recency), F(Frequency), M(Monetary value)를 인자로 사용하여 고객을 세분화합니다.  최종적인 결과는 아래의 이미지와 유사하지만 Monetary value가 추가적으로 포함된다는 점과 내부적인 고객 세분화와 연관된 연산 과정이 다릅니다. 
  
  <br/>
  
@@ -177,6 +177,7 @@ Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은
 하지만 새로운 고객군을 기존 데이터프레임과 합칠 때 개별적인 파티션의 크기 차이의 심화로 이후의 작업에서 연산 속도가 느림을 발견할 수 있었습니다. 그래서 드라이버의 maxResultSize를 1024가 아닌 더 높은 값으로 설정하여 Stage Failure를 막으면서 new_user_df와 df의 파티션의 수를 최적화하고 Garbage Collection Tuning을 한 결과 어플리케이션의 실행 시간을 단축할 수 있었습니다. 
  
 <br>
+
 
 ## Reference
 ___________________
