@@ -58,14 +58,15 @@ ___________________
 	- Shuffle Join과 다르게 Broadcast Join은 Join의 대상이 되는 테이블의 크기 차이가 클 경우 적용됩니다.
 	- 만약 Low Level이 아닌 High Level API를 활용하면 Optimizer에서 Broadcast join을 사용하도록 힌트를 줄 수 있지만 일반적으로 스파크 자체내에서 자동으로 Broadcast 방식으로 통신하는 것을 쉽게 알 수 있습니다.
  
- <br/>
+<br/>
  
-![Broadcast_join_spark](/assets/img/post_img/Broadcast_join_spark.jpeg)
- <br/>
+![Broadcast_join_spark](/assets/img/post_img/Broadcast_join_spark.jpg)
 
-![Shuffle_hash_join_spark](/assets/img/post_img/Shuffle_Hash_join_spark.jpeg)
+<br/>
 
- <br/> 
+![Shuffle_hash_join_spark](/assets/img/post_img/Shuffle_Hash_join_spark.jpg)
+
+<br/> 
  
  특히 Cross Join을 시행할 때는 두 가지 경우의 수가 있을 것입니다. <br/>
  - Small DataFrame Cross Join  
@@ -173,12 +174,4 @@ Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은
 
 <br/>
 
-하지만 새로운 고객군을 기존 데이터프레임과 합칠 때 개별적인 파티션의 크기 차이의 심화로 이후의 작업에서 연산 속도가 느림을 발견할 수 있었습니다. 그래서 드라이버의 maxResultSize를 1024가 아닌 더 높은 값으로 설정하여 Stage Failure를 막으면서 new user df와 df의 파티션의 수를 최적화하고 Garbage Collection Tuning을 한 결과 어플리케이션의 실행 시간을 단축할 수 있었습니다. 
- 
-
-
-
-
-
-
- 
+하지만 새로운 고객군을 기존 데이터프레임과 합칠 때 개별적인 파티션의 크기 차이의 심화로 이후의 작업에서 연산 속도가 느림을 발견할 수 있었습니다. 그래서 드라이버의 maxResultSize를 1024가 아닌 더 높은 값으로 설정하여 Stage Failure를 막으면서 new user df와 df의 파티션의 수를 최적화하고 Garbage Collection Tuning을 한 결과 어플리케이션의 실행 시간을 단축할 수 있었습니다.
