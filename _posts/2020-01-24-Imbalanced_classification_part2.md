@@ -196,7 +196,7 @@ $$
 가상의 불균형 데이터를 만들어서 Brier Score를 살펴보겠습니다. 먼저 10000개 샘플에 관하여 두 가지 예측 변수들과 클래스가 0이거나 1인 클래스를 구성하겠습니다. 노이즈 데이터의 비율은 실험의 명확성을 위해 0으로 설정하였고 다수 클래스에 대한 가중치는 90%로 설정하였습니다. 그리고 y 클래스의 비율로 Stratified random sampling을 거치겠습니다.
 
 ```python
-X, y = mc(n_samples=10000,
+X, y = make_classification(n_samples=10000,
           weights=[0.90],
           n_features = 2,
           n_redundant=0,
