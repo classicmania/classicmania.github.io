@@ -36,16 +36,16 @@ ___________________
 
   <br/>
 
-| |Computation Cost|공통의 키|ROW 처리 방법|
+| |공통의 키|ROW 처리 방법|
 |:------:|:---:|:---:|:---:|
-|Inner Join|△|<span style="color:red">O</span>|Left dataset key and Right dataset key|
-|Outer Join|△|<span style="color:red">O</span>|Left dataset key or Right dataset key|
-|Left Outer Join|△|<span style="color:red">O</span>|Left dataset Key only|
-|Right Outer Join|△|<span style="color:red">O</span>|Right dataset key only|
-|Left Semi Join|△|<span style="color:red">O</span>|Left data set key matching Right dataset key|
-|Left Anti Join|△|<span style="color:red">O</span>|Left data set key not maching Right dataset key|
-|Natural Join|↑|<span style="color:red">X</span>|Implicit join|
-|Cross Join|↑|<span style="color:red">X</span>|Catesian Join|
+|Inner Join|<span style="color:red">O</span>|Left dataset key and Right dataset key|
+|Outer Join|<span style="color:red">O</span>|Left dataset key or Right dataset key|
+|Left Outer Join|<span style="color:red">O</span>|Left dataset Key only|
+|Right Outer Join|<span style="color:red">O</span>|Right dataset key only|
+|Left Semi Join|<span style="color:red">O</span>|Left data set key matching Right dataset key|
+|Left Anti Join|<span style="color:red">O</span>|Left data set key not maching Right dataset key|
+|Natural Join|<span style="color:red">X</span>|Implicit join|
+|Cross Join|<span style="color:red">X</span>|Catesian Join|
 
  <br/>
 
@@ -171,7 +171,7 @@ min Partition Size :  0
 
 <br/>
 
-Join시 RDD 내의 같은 파티션(Partition) 내에서 같은 키값을 같은 데이터가 있어야 합니다. 만약 그렇지 않으면 주어진 키의 갯수와 파티션 내의 데이터를 맞추는 작업을 하는데 많은 비용이 발생합니다. CrossJoin을 함에 있어서 같은 데이터프레임을 활용하고 있으므로 앞에서 살펴본 crossJoin의 첫번째 경우와 같습니다.
+Join시 해당 파티션(Partition) 내에서 같은 키값을 갖는 데이터가 있어야 합니다. 만약 그렇지 않으면 주어진 키의 갯수와 파티션 내의 데이터를 맞추는 작업을 하는데 많은 비용이 발생합니다. CrossJoin을 함에 있어서 같은 데이터프레임을 활용하고 있으므로 앞에서 살펴본 crossJoin의 첫번째 경우와 같습니다.
 
 <br/>
 
