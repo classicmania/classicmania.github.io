@@ -1,5 +1,5 @@
 ---
-title: Recommendation system for E-commerce / User2User & Item2Item
+title: Recommendation system for E-commerce / Collaborative Filtering
 author: Kwon Suncheol
 categories: [Recommendation,Basic]
 tags: [Recommendation,User2User,Item2Item,Collaborative_Filtering,Similarity]
