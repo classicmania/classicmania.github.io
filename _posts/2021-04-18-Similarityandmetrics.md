@@ -21,6 +21,46 @@ comments: true
 ## Similarity
  ___________________
 
+상품 또는 고객을 벡터로 표현한 뒤 벡터 간의 유사도를 비교할 때 일반적으로 'Non-geometric measure'와 'Geometric measure'로 나눌 수 있습니다. 
+
+### Non-geometric measure
+
+Non-geometric measure와 관련하여 많은 유사도 지표가 있지만 대표적으로 몇 가지 지표를 소개하면 다음과 같습니다.
+
+<br/>
+
+#### Pearson Correlation Coefficient
+
+<br/>
+
+$$ Pearson \ Correlation \ Coefficient = \sqrt{\frac{\sum^n_{i=1} (x_i - \hat{x_i}) \ \times \ (y_i - \hat{y_i})}{\sum^n_{i=1} (x_i - \hat{x_i})^2 \ \times \ \sum^n_{i=1} (y_i - \hat{y_i})^2}}$$
+
+<br/>
+
+- X가 증가할 때 Y가 증가할 수록 양의 값을 가집니다.
+- 범위는 -1 ~ 1입니다.
+
+<br/>
+
+#### Jaccard Coefficient
+
+<br/>
+
+$$ Jaccard \ Index = J(X,Y) = \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cap Y|}{|X| +  |Y| -|X \cap Y| }$$
+
+<br/>
+
+$$ Jaccard \ distance(Jaccard \ dissimilarity \ coefficient) = d(X,Y) = 1 - J(X,Y) = 1 - \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cup Y| - |X \cap Y|}{|X \cup Y| }$$
+
+<br/>
+
+- 두 개의 집합 X,Y가 있을 때, Jaccard Index는 X,Y의 교집합의 원소 갯수를 합집합의 원소 갯수로 나눈 값입니다.
+-  자연스럽게 Jaccard Index는 0~1 사이의 값을 가집니다.
+-  유사성을 측정하는 Jaccard Index와는 다르게 Jaccard distance는 비유사성에 관한 측도입니다. 
+-  Jaccard Index와 Jaccard distance는 서로 반비례 관계입니다.
+-  X,Y가 공통으로 가지는 상품 또는 고객은 중요하지만, X,Y 모두 존재하지 않는 상품, 고객은 배제합니다.
+
+
 <br/>
 
 ### Euclidean Similarity vs Cosine Similarity 
@@ -40,7 +80,7 @@ $$ Euclidean\ Similarity = \sqrt{\sum^n_{i=1} (x_i - y_i)^2} $$
 
 <br/>
 
-$$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bullet x} \sqrt{\sum^n_{i=1}y \bullet y}}$$
+$$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bullet x} \sqrt{\sum^n_{i=1}y \bullet y}} = V$$
 
 <br/>
 
@@ -48,7 +88,7 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 
 <br/>
 
-![weight_image2](/assets/img/post_img/Cosine_ED.png)
+![weight_image2](/assets/img/post_img/Cosine_ED.png)_Euclidean vs Cosine_
 
 <br/>
 
@@ -62,7 +102,54 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 	-  또한 상품 A와 상품 B중 유클리드 거리 측도로 보았을 때는 상품 A가 조금 더 유사한 상품입니다.
 - 이렇게 어떤 유사도를 최종 단계에서 선택하느냐에 따라서 추천되는 상품이 달라질 수 있으므로 상품 유사도 간의 비교를 반드시 고려해야 합니다.
 
-<br>
+<br/>
+
+![TS and SS](/assets/img/post_img/ts_ss_image.png)_TS and SS_
+
+<br/>
+
+- 유클리드 거리 속성과 코사인 유사도의 특징을 혼합한 지표는 만들 수 없을까요?
+- 두 벡터를 기점으로 만들어지는 삼각형의 넓이를 유사도로 설정하면 어떨까요?
+	- SAS(Side Angle Side)[삼각형의 한 각이 다른 삼각형의 각과 합동이면서 각을 이루는 두 변의 비율이 서로 비례하면 삼각형은 유사하다]를 활용하겠습니다.
+	- 위의 그림처럼 N차원의 벡터(A,B)의 강도를 표현하면 다음과 같습니다.
+	
+	<br/>
+		
+	$$
+	|A| = \sqrt{\sum^N_{k=1}(A_n)^2} \ and \ |B| = \sqrt{\sum^N_{k=1}(B_n)^2}
+	$$
+	
+	<br/>
+	
+	- 코사인 유사도를 활용하여 양변 사이의 각(\\(\theta)\\)을 구할 수 있습니다. 
+	-  하지만 위의 (a) 그래프에서 B,C 사이의 각이 형성되지 않습니다. 이 점을 고려하여 각(\\(\hat{\theta)}\\)은 다음과 같이 계산합니다.
+		- 절대적인 숫자는 정해지지 않았지만 계산의 편리함을 위해서 10 미만은 사용하지 않습니다.  
+		
+	<br/>
+	
+	$$
+	\hat{\theta} = cos^{-1}(V) + 10
+	$$
+	
+	<br/>
+	
+	- TS(Triangle's Area Similarity)는 위의 정보들을 활용하여 다음과 같이 구할 수 있습니다.
+	
+	<br/>
+	
+	$$
+	TS(A,B) = \frac{|A| \, \cdot \,  |B| \, \cdot \, sin(\hat{\theta})}{2}
+	$$
+	
+	<br/>
+	
+	- TS(A,B)의 정의는 
+		- 두 벡터(A,B)가 서로 유사할 수록 두 벡터를 이루는 삼각형의 넓이는 줄어듭니다.
+		- 두 벡터가 완전히 일치하면 삼각형의 넓이는 0입니다.
+	
+	
+	
+<br/>
 
 ![rec_metric](/assets/img/post_img/rec_metric.jpeg)
 
@@ -74,11 +161,11 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 
 ### Online Metric
 
-</br>
+<br/>
 
 - 일반적으로 비즈니스 환경에서 수익 최대화를 위해서 추천 시스템을 도입할 때 얼마만큼 추천 시스템이 고객의 행동에 영향을 주는지 측정하고 싶습니다. 이런 예측은 고객의 문맥이나 의도 그리고 이커머스 도메인의 성격에 따른 다양한 요인들의 결합들에 영향을 받습니다. 이것을 파악하는데 있어 사실 Online Test는 Offline Test에 비해 훨씬 효과적입니다. 
 
-</br>
+<br/>
 
 - 이커머스상에서 추천 시스템을 운영할 때 비즈니스 관점에서는 다음을 생각할 수 있습니다.
 	- 고객이 얼마나 많은 카테고리에 해당하는 상품들을 추천받고 있는가?
@@ -87,7 +174,7 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 	- 이커머스 사이트의 매출액이 추천 엔진을 통해 얼마만큼 증가했는가?
 	- 고객 이탈이 추천 엔진을 통해 얼마만큼 감소했는가?
 
-</br>
+<br/>
 
 - 위와 같이 추천 시스템의 효과를 측정하는 방법과 요소들은 문맥에 따라 상당히 다양합니다.
 - 하지만 온라인 테스트를 진행할 때는 일반적으로 전체 고객들 중에서 샘플링한 뒤 추천 엔진의 평가 요소를 단일화해야 합니다. 
@@ -319,6 +406,7 @@ for each user u:
 [^3]: [User2User and Item2Item](https://classicmania.github.io/posts/User2userItem2Item/)
 [^4]: [Root mean square error (RMSE) or mean absolute error (MAE)?](https://gmd.copernicus.org/articles/7/1247/2014/gmd-7-1247-2014.pdf) 
 -  [Arguments against avoiding RMSE in the literature](https://gmd.copernicus.org/articles/7/1247/2014/gmd-7-1247-2014.pdf)
+-  [Side-Angle-Side Proof](https://mathbitsnotebook.com/Geometry/Similarity/SMProofs.html)
 - [A Hybrid Geometric Approach for Measuring Similarity Level Among Documents and Document Clustering](https://ieeexplore.ieee.org/document/7474366/references#references)
 - [Evaluating Recommender Systems: Root Means Squared Error or Mean Absolute Error?](https://towardsdatascience.com/evaluating-recommender-systems-root-means-squared-error-or-mean-absolute-error-1744abc2beac)
 - [What does RMSE really mean?](https://towardsdatascience.com/what-does-rmse-really-mean-806b65f2e48e)
