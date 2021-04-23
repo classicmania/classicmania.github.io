@@ -87,7 +87,7 @@ $$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \b
 
 <br/>
 
-![weight_image2](/assets/img/post_img/Cosine_ED.png)_Euclidean and Cosine_
+![weight_image2](/assets/img/post_img/Cosine_ED.png)_Euclidean and Cosine example_
 
 <br/>
 
@@ -124,6 +124,16 @@ $$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \b
 	-  하지만 위의 (a) 그래프에서 B,C 사이의 각이 형성되지 않습니다. 이 점을 고려하여 각(\\(\hat{\theta)}\\)은 다음과 같이 계산합니다.
 		- 절대적인 숫자는 정해지지 않았지만 계산의 편리함을 위해서 10 미만은 사용하지 않습니다.  
 		
+	<br/>
+	
+	$$
+	\hat{\theta} = cos^{-1}(V) + 10
+	$$
+	
+	<br/>
+	
+	- TS(Triangle's Area Similarity)는 위의 정보들을 활용하여 다음과 같이 구할 수 있습니다.
+	
 	<br/>
 
 	
