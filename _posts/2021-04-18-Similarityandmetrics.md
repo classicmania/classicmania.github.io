@@ -33,7 +33,7 @@ Non-geometric measure와 관련하여 많은 유사도 지표가 있지만 대�
 
 <br/>
 
-$$ Pearson \ Correlation \ Coefficient = \sqrt{\frac{\sum^n_{i=1} (x_i - \hat{x_i}) \ \times \ (y_i - \hat{y_i})}{\sum^n_{i=1} (x_i - \hat{x_i})^2 \ \times \ \sum^n_{i=1} (y_i - \hat{y_i})^2}}$$
+$$ Pearson \, Correlation \, Coefficient = \sqrt{\frac{\sum^n_{i=1} (x_i - \hat{x_i}) \, \times \, (y_i - \hat{y_i})}{\sum^n_{i=1} (x_i - \hat{x_i})^2 \, \times \, \sum^n_{i=1} (y_i - \hat{y_i})^2}}$$
 
 <br/>
 
@@ -46,11 +46,11 @@ $$ Pearson \ Correlation \ Coefficient = \sqrt{\frac{\sum^n_{i=1} (x_i - \hat{x_
 
 <br/>
 
-$$ Jaccard \ Index = J(X,Y) = \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cap Y|}{|X| +  |Y| -|X \cap Y| }$$
+$$ Jaccard \, Index = J(X,Y) = \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cap Y|}{|X| +  |Y| -|X \cap Y| }$$
 
 <br/>
 
-$$ Jaccard \ distance(Jaccard \ dissimilarity \ coefficient) = d(X,Y) = 1 - J(X,Y) = 1 - \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cup Y| - |X \cap Y|}{|X \cup Y| }$$
+$$ Jaccard \, distance(Jaccard \, dissimilarity \, coefficient) = d(X,Y) = 1 - J(X,Y) = 1 - \frac{|X \cap Y|}{|X \cup Y|} = \frac{|X \cup Y| - |X \cap Y|}{|X \cup Y| }$$
 
 <br/>
 
@@ -59,7 +59,6 @@ $$ Jaccard \ distance(Jaccard \ dissimilarity \ coefficient) = d(X,Y) = 1 - J(X,
 -  유사성을 측정하는 Jaccard Index와는 다르게 Jaccard distance는 비유사성에 관한 측도입니다. 
 -  Jaccard Index와 Jaccard distance는 서로 반비례 관계입니다.
 -  X,Y가 공통으로 가지는 상품 또는 고객은 중요하지만, X,Y 모두 존재하지 않는 상품, 고객은 배제합니다.
-
 
 <br/>
 
@@ -74,13 +73,13 @@ $$ Jaccard \ distance(Jaccard \ dissimilarity \ coefficient) = d(X,Y) = 1 - J(X,
 
 <br/>
 
-$$ Euclidean\ Similarity = \sqrt{\sum^n_{i=1} (x_i - y_i)^2} $$
+$$ Euclidean \, Similarity = \sqrt{\sum^n_{i=1} (x_i - y_i)^2} $$
 
 <br/>
 
 <br/>
 
-$$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bullet x} \sqrt{\sum^n_{i=1}y \bullet y}} = V$$
+$$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bullet x} \sqrt{\sum^n_{i=1}y \bullet y}} = V$$
 
 <br/>
 
@@ -88,7 +87,7 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 
 <br/>
 
-![weight_image2](/assets/img/post_img/Cosine_ED.png)_Euclidean vs Cosine_
+![weight_image2](/assets/img/post_img/Cosine_ED.png)_Euclidean and Cosine_
 
 <br/>
 
@@ -116,7 +115,7 @@ $$ Cosine\ Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \bul
 	<br/>
 		
 	$$
-	|A| = \sqrt{\sum^N_{k=1}(A_n)^2} \ and \ |B| = \sqrt{\sum^N_{k=1}(B_n)^2}
+	|A| = \sqrt{\sum^N_{k=1}(A_n)^2} \, and \, |B| = \sqrt{\sum^N_{k=1}(B_n)^2}
 	$$
 	
 	<br/>
@@ -368,7 +367,7 @@ for each user u:
 
 		<br/>
 		
-		 $$IDCG_p = \sum^{|REL_p|}_{i=1} \ \frac{2^{rel_i}-1}{log_2{(i+1)}} $$
+		 $$ IDCG_p = \sum^{|REL_p|}_{i=1} \ \frac{2^{rel_i}-1}{log_2{(i+1)}} $$
  	
 		 <br/>  	
 		
