@@ -134,13 +134,7 @@ $$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \b
 	
 	- TS(Triangle's Area Similarity)는 위의 정보들을 활용하여 다음과 같이 구할 수 있습니다.
 	
-	<br/>
-
-	$$
-	TS(A,B) = \frac{|A|\, \times |B|\, \times sin(\hat{\theta})}{2}
-	$$
-	
-	
+		
 <br/>
 
 
