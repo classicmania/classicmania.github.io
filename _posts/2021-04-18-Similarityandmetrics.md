@@ -136,9 +136,6 @@ $$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \b
 	
 	<br/>
 
-	$$
-	TS(A,B) = \frac{|A|\, \times |B|\, \times sin(\hat{\theta})}{2}
-	$$
 	
 	<br/>
 	
