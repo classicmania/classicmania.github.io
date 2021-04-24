@@ -140,7 +140,14 @@ $$ Cosine \, Similarity = \frac{\sum^n_{i=1} x \bullet y}{\sqrt{\sum^n_{i=1}x \b
 	TS(A,B) = \frac{|A|\, \times |B|\, \times \, sin(\hat{\theta})}{2}
 	$$
 	
+
+<br/>
 	
+- TS(A,B)의 정의를 통해 다음의 사실을 알 수 있습니다.
+	- 두 벡터(A,B)가 서로 유사할 수록 두 벡터를 이루는 삼각형의 넓이는 줄어듭니다.
+	- 두 벡터가 완전히 일치하면 삼각형의 넓이는 0입니다.
+	
+
 <br>
 
 
